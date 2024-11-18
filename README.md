@@ -48,12 +48,13 @@ It is important to mention that there can be at most one lucky number in a matri
 | __b < x__ |       |       |       |
 | __b < x__ |       | __y__ |       |
 | __b < x__ |       |       |       |
+
 __x__ is a lucky number (minimum in a row and maximum in a column), __a__ is some number that is greater than __x__, __b__ is some number that is smaller than __x__, and __y__ is another lucky number.
 
 If __y__ is a lucky number then __y > a__ and __y < b__ which implies that __y > x__ and __y < x__. It is impossible that __y__ is greater and smaller than __x__ at the same time. 
 
 ###### Complexity
-Algorithm has to visit every cell of a matrix once and after that it has to search array of length equal to the number of rows in the matrix.
+Algorithm has to visit each cell of a matrix once and after that it has to search an array of length equal to the number of rows in the matrix.
 $$O_\text{seq}=O(mn)+O(m)=O(mn)$$
 where $m$ is a number of rows in a matrix and $n$ is a number of columns.
 
@@ -61,7 +62,7 @@ where $m$ is a number of rows in a matrix and $n$ is a number of columns.
 Parallel algorithm that I developed take similar approach to sequential one. It use the rule "divide and conquer" to split rows and columns of a matrix. Next it again use mentioned rule to find extremums and at the end to search for a lucky number in an arrays of coordinates.
 
 ##### Complexity
-In the following calculations I use $x$ and $y$ as a substitution for $m$ and $n$ because algorithms that look for coordinates of all minimums in a rows and maximums in a columns differ only in comparison operation and if they are splitting matrix alongside rows or columns. 
+In the following calculations I use $x$ and $y$ as a substitution for $m$ and $n$. Algorithms that look for coordinates of all minimums in a rows and maximums in a columns differ only in comparison operation and if they are splitting matrix alongside rows or columns. 
 
 First I will calculate complexity of searching for extremum in one row or column. 
 
@@ -99,7 +100,7 @@ $$D(xy) = D(mn) =
 	O(\log_2 n), & \text{otherwise}
 \end{cases}$$
 
-Next complexity of searching for lucky number among extremums:
+Next complexity of searching for lucky number form among extremums:
 
 __Work:__
 $W(m)=2\cdot W(\frac{m}{2}) + O(1)$
@@ -122,3 +123,23 @@ $W(mn)=O(mn)+O(mn)+O(m)=O(mn)$
 
 __Depth:__
 $D(mn) = O(\log_2 m) + O(\log_2 m) + O(\log_2 m) = O(\log_2 m)$
+
+##### Speed-Up
+$t_\text{seq}=mn$
+$t_p= \frac{W}{p} + D = \frac{mn}{p} + \log_2 m$
+$$\frac{t_\text{seq}}{t_p} = \frac{mn}{\frac{mn}{p} + \log_2 m}=\frac{1}{\frac{1}{p} + \frac{\log_2 m}{mn}}$$
+Example speed up:
+$p=4$, $m=16384$, $n = 10000$
+$$\frac{t_\text{seq}}{t_p}=\frac{1}{\frac{1}{4} + \frac{14}{1638400000}} \approx 3,99$$
+### Results and benchmarks 
+So in theory parallel algorithm should be much faster but...
+
+$p=4$, $m=16384$, $n = 10000$
+![[Pasted image 20241118010253.png]]
+
+From the parallel graph view (it was generated for much smaller matrix than in benchmark) it can be seen that inner nodes that should have complexity O(1) are doing some additional work. Moreover at the beginning of execution threads are waiting for about $\frac{2}{3}$ of the whole execution time doing nothing.
+
+![[Pasted image 20241118010611.png]]
+
+### Conclusion
+Speed-up formula show that parallel algorithm that I have proposed should be much faster than sequential one. Unfortunately my implementation turned out to have some critical issues which I do not know about yet. I plan to optimize my implementation to make it work as expected.   

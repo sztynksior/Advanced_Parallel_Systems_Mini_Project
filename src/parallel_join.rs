@@ -1,6 +1,3 @@
-use rayon::join;
-use std::time::Instant;
-
 pub fn find_lucky_number(matrix: &[Vec<i32>]) -> Vec<i32> {
     let number_of_rows = matrix.len();
     let number_of_columns = matrix[0].len();
@@ -36,7 +33,7 @@ fn find_minimas_in_rows(
         let (rows_min_positions_left, rows_min_positions_right) =
             rows_min_positions.split_at_mut(rows_min_positions.len() / 2);
         let left_split_last_row_number = current_row - rows_min_positions_right.len();
-        diam::join(
+        rayon::join(
             || find_minimas_in_rows(matrix, rows_min_positions_left, &left_split_last_row_number),
             || find_minimas_in_rows(matrix, rows_min_positions_right, current_row),
         );
@@ -62,7 +59,7 @@ pub fn find_minimum(
         let right_split_length = split_lenght - left_split_length;
         let left_split_min_position = min_column - right_split_length;
 
-        let (min_position_left, min_position_right) = diam::join(
+        let (min_position_left, min_position_right) = rayon::join(
             || find_minimum(matrix, left_split_length, min_row, left_split_min_position),
             || find_minimum(matrix, right_split_length, min_row, min_column),
         );
@@ -89,7 +86,7 @@ fn find_maximas_in_cols(
         let (cols_max_positions_top, cols_max_positions_bottom) =
             cols_max_positions.split_at_mut(cols_max_positions.len() / 2);
         let left_split_last_col_number = current_col - cols_max_positions_bottom.len();
-        diam::join(
+        rayon::join(
             || find_maximas_in_cols(matrix, cols_max_positions_top, left_split_last_col_number),
             || find_maximas_in_cols(matrix, cols_max_positions_bottom, current_col),
         );
@@ -115,7 +112,7 @@ fn find_maximum(
         let bottom_split_length = split_length - top_split_length;
         let top_split_max_position = max_row - bottom_split_length;
 
-        let (max_position_top, max_position_bottom) = diam::join(
+        let (max_position_top, max_position_bottom) = rayon::join(
             || find_maximum(matrix, top_split_length, top_split_max_position, max_column),
             || find_maximum(matrix, bottom_split_length, max_row, max_column),
         );
@@ -142,7 +139,7 @@ fn search_for_lucky_number(
         let (rows_min_positions_left, rows_min_positions_right) =
             rows_min_positions.split_at(rows_min_positions.len() / 2);
 
-        let (left_search_result, right_search_result) = diam::join(
+        let (left_search_result, right_search_result) = rayon::join(
             || search_for_lucky_number(rows_min_positions_left, cols_max_positions),
             || search_for_lucky_number(rows_min_positions_right, cols_max_positions),
         );
