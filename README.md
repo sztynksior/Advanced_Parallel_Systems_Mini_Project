@@ -53,84 +53,124 @@ __x__ is a lucky number (minimum in a row and maximum in a column), __a__ is som
 
 If __y__ is a lucky number then __y > a__ and __y < b__ which implies that __y > x__ and __y < x__. It is impossible that __y__ is greater and smaller than __x__ at the same time. 
 
-###### Complexity
+#### Complexity
 Algorithm has to visit each cell of a matrix once and after that it has to search an array of length equal to the number of rows in the matrix.
+
 $$O_\text{seq}=O(mn)+O(m)=O(mn)$$
+
 where $m$ is a number of rows in a matrix and $n$ is a number of columns.
 
 ### Parallel solution
 Parallel algorithm that I developed take similar approach to sequential one. It use the rule "divide and conquer" to split rows and columns of a matrix. Next it again use mentioned rule to find extremums and at the end to search for a lucky number in an arrays of coordinates.
 
-##### Complexity
+#### Complexity
 In the following calculations I use $x$ and $y$ as a substitution for $m$ and $n$. Algorithms that look for coordinates of all minimums in a rows and maximums in a columns differ only in comparison operation and if they are splitting matrix alongside rows or columns. 
 
-First I will calculate complexity of searching for extremum in one row or column. 
+- First I will calculate complexity of searching for extremum in one row or column. 
+	
+	__Work:__
+	
+	$W(x)=2\cdot W(\frac{x}{2}) + O(1)$
+	
+	Root complexity: $O(1)$
+	
+	Leafs complexity: $1 \cdot 2^{\log_2 x - 1}=\frac{x}{2}=O(\frac{x}{2})=O(x)$
+	
+	Leafs have greater complexity than root so applying master theorem:
+	
+	$W(x)=O(x)$
+	
+	__Depth:__
+	
+	$D(x)=max(D(\frac{x}{2}), D(\frac{x}{2})) + O(1)=D(\frac{x}{2}) + O(1)$
+	
+	Root complexity: $O(1)$
+	
+	Leaf complexity: $1 \cdot 2^{\log_2 2 - 1}=1=O(1)$
+	
+	Leaf and root have same complexity so applying master theorem:
+	
+	$D(x) = 1 \cdot \log_2 x = O(log_2 x)$
 
-__Work:__
-$W(x)=2\cdot W(\frac{x}{2}) + O(1)$
-Root complexity = $O(1)$
-Leafs complexity = $1 \cdot 2^{\log_2 x - 1}=\frac{x}{2}=O(\frac{x}{2})=O(x)$
-Leafs have greater complexity than root so applying master theorem:
-$W(x)=O(x)$
+- Now complexity of searching for all extremums coordinates in a rows or columns.
+	
+	__Work:__
+	
+	$W(xy)=2\cdot W(\frac{xy}{2}) + O(1)$
+	
+	Root complexity: $O(1)$
+	
+	Leafs complexity: $\frac{y}{2} \cdot 2^{\log_2 x}=\frac{xy}{2}=O(\frac{xy}{2})=O(xy)$
+	
+	Leafs have greater complexity than root so applying master theorem:
+	
+	$W(xy)=O(xy)=O(mn)$
+	
+	__Depth:__
+	
+	$D(xy)=max(D(\frac{xy}{2}), D(\frac{xy}{2})) + O(1)=D(\frac{xy}{2}) + O(1)$
+	
+	Root complexity: $O(1)$
+	
+	Leaf complexity: $\log_2 x \cdot 2^{\log_2 1}=\log_2 x=O(\log_2 x)$
+	
+	Leaf have greater complexity than root so applying master theorem:
+	
+	$$D(xy) = D(mn) = 
+	\begin{cases} 
+		O(\log_2 m), & \text{ if } m > n \\
+		O(\log_2 n), & \text{otherwise}
+	\end{cases}$$
 
-__Depth:__
-$D(x)=max(D(\frac{x}{2}), D(\frac{x}{2})) + O(1)=D(\frac{x}{2}) + O(1)$
-Root complexity = $O(1)$
-Leaf complexity = $1 \cdot 2^{\log_2 2 - 1}=1=O(1)$
-Leaf and root have same complexity so applying master theorem:
-$D(x) = 1 \cdot \log_2 x = O(log_2 x)$
+- Next complexity of searching for lucky number form among extremums:
+	
+	__Work:__
+	
+	$W(m)=2\cdot W(\frac{m}{2}) + O(1)$
+	
+	Root complexity: $O(1)$
+	
+	Leafs complexity: $1 \cdot 2^{\log_2 m}=m=O(x)$
+	
+	Leafs have greater complexity than root so applying master theorem:
+	
+	$W(m)=O(m)$
+	
+	__Depth:__
+	
+	$D(m)=max(D(\frac{m}{2}), D(\frac{m}{2})) + O(1)=D(\frac{m}{2}) + O(1)$
+	
+	Root complexity: $O(1)$
+	
+	Leaf complexity: $1 \cdot 2^{\log_2 1}=1=O(1)$
+	
+	Leaf and root have same complexity so applying master theorem:
+	
+	$D(m) = 1 \cdot \log_2 m = O(\log_2 m)$
 
-Now complexity of searching for all extremums coordinates in a rows or columns.
-
-__Work:__
-$W(xy)=2\cdot W(\frac{xy}{2}) + O(1)$
-Root complexity = $O(1)$
-Leafs complexity = $\frac{y}{2} \cdot 2^{\log_2 x}=\frac{xy}{2}=O(\frac{xy}{2})=O(xy)$
-Leafs have greater complexity than root so applying master theorem:
-$W(xy)=O(xy)=O(mn)$
-
-__Depth:__
-$D(xy)=max(D(\frac{xy}{2}), D(\frac{xy}{2})) + O(1)=D(\frac{xy}{2}) + O(1)$
-Root complexity = $O(1)$
-Leaf complexity = $\log_2 x \cdot 2^{\log_2 1}=\log_2 x=O(\log_2 x)$
-Leaf have greater complexity than root so applying master theorem:
-$$D(xy) = D(mn) = 
-\begin{cases} 
-	O(\log_2 m), & \text{ if } m > n \\
-	O(\log_2 n), & \text{otherwise}
-\end{cases}$$
-
-Next complexity of searching for lucky number form among extremums:
-
-__Work:__
-$W(m)=2\cdot W(\frac{m}{2}) + O(1)$
-Root complexity = $O(1)$
-Leafs complexity = $1 \cdot 2^{\log_2 m}=m=O(x)$
-Leafs have greater complexity than root so applying master theorem:
-$W(m)=O(m)$
-
-__Depth:__
-$D(m)=max(D(\frac{m}{2}), D(\frac{m}{2})) + O(1)=D(\frac{m}{2}) + O(1)$
-Root complexity = $O(1)$
-Leaf complexity = $1 \cdot 2^{\log_2 1}=1=O(1)$
-Leaf and root have same complexity so applying master theorem:
-$D(m) = 1 \cdot \log_2 m = O(\log_2 m)$
-
-Finally for the whole algorithm. Finding coordinates of minimums in a rows and maximums in a columns and searching for lucky number are three sequential calls. I will also assume that $m > n$ to make calculations more clear.
-
-__Work:__
-$W(mn)=O(mn)+O(mn)+O(m)=O(mn)$
-
-__Depth:__
-$D(mn) = O(\log_2 m) + O(\log_2 m) + O(\log_2 m) = O(\log_2 m)$
+- Finally for the whole algorithm. Finding coordinates of minimums in a rows and maximums in a columns and searching for lucky number are three sequential calls. I will also assume that $m > n$ to make calculations more clear.
+	
+	__Work:__
+	
+	$W(mn)=O(mn)+O(mn)+O(m)=O(mn)$
+	
+	__Depth:__
+	
+	$D(mn) = O(\log_2 m) + O(\log_2 m) + O(\log_2 m) = O(\log_2 m)$
 
 ##### Speed-Up
 $t_\text{seq}=mn$
+
 $t_p= \frac{W}{p} + D = \frac{mn}{p} + \log_2 m$
+
 $$\frac{t_\text{seq}}{t_p} = \frac{mn}{\frac{mn}{p} + \log_2 m}=\frac{1}{\frac{1}{p} + \frac{\log_2 m}{mn}}$$
+
 Example speed up:
+
 $p=4$, $m=16384$, $n = 10000$
+
 $$\frac{t_\text{seq}}{t_p}=\frac{1}{\frac{1}{4} + \frac{14}{1638400000}} \approx 3,99$$
+
 ### Results and benchmarks 
 So in theory parallel algorithm should be much faster but...
 
