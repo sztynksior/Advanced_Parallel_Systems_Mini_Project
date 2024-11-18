@@ -135,11 +135,12 @@ $$\frac{t_\text{seq}}{t_p}=\frac{1}{\frac{1}{4} + \frac{14}{1638400000}} \approx
 So in theory parallel algorithm should be much faster but...
 
 $p=4$, $m=16384$, $n = 10000$
-![[Pasted image 20241118010253.png]]
+
+![Alt text](https://github.com/sztynksior/Advanced_Parallel_Systems_Mini_Project/blob/main/Pasted%20image%2020241118010253.png)
 
 From the parallel graph view (it was generated for much smaller matrix than in benchmark) it can be seen that inner nodes that should have complexity O(1) are doing some additional work. Moreover at the beginning of execution threads are waiting for about $\frac{2}{3}$ of the whole execution time doing nothing.
 
-![[Pasted image 20241118010611.png]]
+![Alt text](https://github.com/sztynksior/Advanced_Parallel_Systems_Mini_Project/blob/main/Pasted%20image%2020241118010611.png)
 
 ### Conclusion
-Speed-up formula show that parallel algorithm that I have proposed should be much faster than sequential one. Unfortunately my implementation turned out to have some critical issues which I do not know about yet. I plan to optimize my implementation to make it work as expected.   
+The Speed-up formula show that the parallel algorithm that I have proposed should be much faster than the sequential one. Unfortunately my implementation turned out to have some critical issues which I do not know about yet. I plan to optimize my solution to make it work as expected.   
